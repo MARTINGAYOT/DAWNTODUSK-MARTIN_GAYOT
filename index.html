@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Martin Gayot — Financial Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&family=Inconsolata:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:    #0F1E2E;
+  --ink2:   #1A2E44;
+  --blue:   #1F5C8B;
+  --blue2:  #2E7BB5;
+  --blue3:  #D6E8F5;
+  --amber:  #C47E2A;
+  --amber2: #E09840;
+  --amber3: #FDF3E0;
+  --white:  #FFFFFF;
+  --off:    #F5F8FB;
+  --mist:   #EBF2F8;
+  --border: #C8D8E8;
+  --text:   #1C2B3A;
+  --text2:  #4A6070;
+  --text3:  #8A9EB0;
+  --mono:   'Inconsolata', monospace;
+  --head:   'Syne', sans-serif;
+  --body:   'Outfit', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--white);color:var(--text);overflow-x:hidden;cursor:none}
+
+/* ── CURSOR ── */
+#cur{width:10px;height:10px;background:var(--amber);border-radius:50%;
+  position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+  transition:width .15s,height .15s,background .15s}
+#cur-r{width:34px;height:34px;border:1.5px solid rgba(196,126,42,.4);border-radius:50%;
+  position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
+  transition:transform .12s ease}
+body:has(a:hover) #cur,body:has(button:hover) #cur{width:18px;height:18px}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;height:54px;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem}
+.nav-mark{font-family:var(--head);font-size:.9rem;font-weight:800;color:var(--ink);
+  display:flex;align-items:center;gap:.5rem}
+.nav-mark span{width:8px;height:8px;background:var(--amber);border-radius:2px;display:inline-block}
+.nav-items{display:flex;gap:.1rem}
+.nav-items a{font-family:var(--mono);font-size:.68rem;letter-spacing:.5px;color:var(--text3);
+  padding:.35rem .8rem;border-radius:4px;text-decoration:none;transition:all .2s;
+  border:1px solid transparent}
+.nav-items a:hover,.nav-items a.active{color:var(--blue);background:var(--mist);
+  border-color:var(--border)}
+.nav-badge{font-family:var(--mono);font-size:.65rem;background:var(--amber3);
+  color:var(--amber);border:1px solid rgba(196,126,42,.3);padding:.3rem .75rem;
+  border-radius:100px;letter-spacing:.5px}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;
+  padding:80px 0 60px;position:relative;overflow:hidden}
+
+/* Left panel */
+.hero-l{background:var(--ink2);padding:80px 3rem 60px;
+  display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+.hero-l::before{content:'';position:absolute;top:-80px;right:-80px;
+  width:320px;height:320px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,126,42,.15) 0%,transparent 70%);pointer-events:none}
+.hero-l::after{content:'';position:absolute;bottom:40px;left:0;
+  width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(196,126,42,.3),transparent)}
+
+.hl-label{font-family:var(--mono);font-size:.65rem;letter-spacing:2px;color:var(--amber2);
+  text-transform:uppercase;margin-bottom:2rem;
+  display:flex;align-items:center;gap:.75rem}
+.hl-label::before{content:'';width:24px;height:1px;background:var(--amber)}
+
+.hl-name{font-family:var(--head);font-size:clamp(3rem,5vw,5rem);font-weight:800;
+  color:var(--white);line-height:.95;letter-spacing:-2px;margin-bottom:1rem;
+  animation:slideR .9s ease both}
+.hl-name em{color:var(--amber);font-style:normal}
+
+.hl-role{font-family:var(--head);font-size:1rem;font-weight:400;color:rgba(255,255,255,.45);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:2.5rem;
+  animation:slideR .9s .1s ease both}
+
+.hl-stats{display:flex;flex-direction:column;gap:1rem;margin-bottom:2.5rem;
+  animation:slideR .9s .2s ease both}
+.hls{display:flex;align-items:center;gap:1rem;padding:.75rem 1rem;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;
+  transition:background .2s}
+.hls:hover{background:rgba(255,255,255,.08)}
+.hls-num{font-family:var(--head);font-size:1.6rem;font-weight:800;color:var(--amber2);
+  line-height:1;min-width:52px}
+.hls-lbl{font-size:.8rem;color:rgba(255,255,255,.5);line-height:1.5}
+
+.hl-cta{display:flex;gap:.75rem;flex-wrap:wrap;animation:slideR .9s .3s ease both}
+.btn-a{background:var(--amber);color:var(--ink);font-family:var(--head);font-size:.8rem;
+  font-weight:700;letter-spacing:.3px;padding:.75rem 1.6rem;border-radius:6px;
+  text-decoration:none;transition:all .2s}
+.btn-a:hover{background:var(--amber2);transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(196,126,42,.3)}
+.btn-b{background:transparent;color:rgba(255,255,255,.6);font-family:var(--head);font-size:.8rem;
+  font-weight:600;padding:.75rem 1.6rem;border-radius:6px;border:1px solid rgba(255,255,255,.15);
+  text-decoration:none;transition:all .2s}
+.btn-b:hover{border-color:rgba(255,255,255,.35);color:var(--white);transform:translateY(-2px)}
+
+/* Right panel */
+.hero-r{background:var(--off);padding:80px 3rem 60px;
+  display:flex;flex-direction:column;justify-content:center;position:relative}
+.hero-r::before{content:'FY2026';font-family:var(--head);font-size:8rem;font-weight:800;
+  color:rgba(31,92,139,.04);position:absolute;bottom:40px;right:20px;line-height:1;
+  pointer-events:none;user-select:none}
+
+.ticker-label{font-family:var(--mono);font-size:.65rem;letter-spacing:2px;color:var(--blue);
+  text-transform:uppercase;margin-bottom:1.5rem;padding-bottom:.75rem;
+  border-bottom:1px solid var(--border)}
+.ticker-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:2rem}
+.ticker{background:var(--white);border:1px solid var(--border);border-radius:8px;
+  padding:1rem 1.25rem;transition:all .2s;cursor:default}
+.ticker:hover{border-color:var(--blue2);transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(31,92,139,.08)}
+.ticker-val{font-family:var(--head);font-size:1.6rem;font-weight:800;color:var(--ink);line-height:1}
+.ticker-val.pos{color:#1A7A45}
+.ticker-val.neg{color:#B33A2A}
+.ticker-name{font-family:var(--mono);font-size:.62rem;color:var(--text3);
+  margin-top:.3rem;letter-spacing:.5px}
+.ticker-sub{font-family:var(--mono);font-size:.6rem;color:var(--text3);margin-top:.15rem}
+
+.mini-pnl{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:1.25rem}
+.mpnl-title{font-family:var(--mono);font-size:.65rem;letter-spacing:1px;color:var(--text3);
+  margin-bottom:.85rem;text-transform:uppercase}
+.mpnl-row{display:flex;justify-content:space-between;align-items:center;
+  padding:.35rem 0;border-bottom:1px solid var(--mist);font-size:.82rem}
+.mpnl-row:last-child{border:none;font-weight:600;color:var(--ink);padding-top:.5rem}
+.mpnl-row span:first-child{color:var(--text2)}
+.mpnl-row span:last-child{font-family:var(--mono);font-size:.8rem}
+.mpnl-row.pos span:last-child{color:#1A7A45}
+.mpnl-row.neg span:last-child{color:#B33A2A}
+.mpnl-row.total span:last-child{color:var(--blue);font-weight:700}
+
+@keyframes slideR{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}}
+
+/* ── SECTIONS ── */
+.section{padding:88px 2.5rem}
+.inner{max-width:1100px;margin:0 auto}
+.s-pre{font-family:var(--mono);font-size:.65rem;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--amber);margin-bottom:.5rem}
+.s-title{font-family:var(--head);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;
+  color:var(--ink);letter-spacing:-.5px;margin-bottom:.75rem;line-height:1.1}
+.s-sub{font-size:.92rem;color:var(--text2);max-width:580px;line-height:1.9;
+  margin-bottom:3.5rem;font-weight:300}
+.s-rule{width:36px;height:3px;background:linear-gradient(to right,var(--amber),var(--amber2));
+  border-radius:2px;margin-bottom:1rem}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .65s ease,transform .65s ease}
+.reveal.in{opacity:1;transform:none}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+/* ── LIVE DEMOS ── */
+#demos{background:var(--off)}
+.demo-tabs{display:flex;gap:.5rem;margin-bottom:2rem;flex-wrap:wrap}
+.dtab{font-family:var(--mono);font-size:.72rem;letter-spacing:.5px;padding:.5rem 1.1rem;
+  border-radius:6px;cursor:pointer;color:var(--text2);border:1px solid var(--border);
+  background:var(--white);transition:all .2s}
+.dtab:hover{border-color:var(--blue2);color:var(--blue)}
+.dtab.active{background:var(--ink2);color:var(--white);border-color:var(--ink2)}
+
+.dpane{display:none}
+.dpane.active{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;align-items:start}
+
+.dp-left h3{font-family:var(--head);font-size:1.5rem;font-weight:700;color:var(--ink);
+  margin-bottom:.3rem}
+.dp-caption{font-family:var(--mono);font-size:.65rem;color:var(--amber);
+  letter-spacing:1px;margin-bottom:.85rem}
+.dp-left p{font-size:.88rem;color:var(--text2);line-height:1.88;margin-bottom:1.25rem;font-weight:300}
+.dp-outputs{display:flex;flex-direction:column;gap:.5rem}
+.dp-out{background:var(--white);border:1px solid var(--border);border-radius:7px;
+  padding:.7rem 1rem;display:flex;align-items:center;gap:.75rem;
+  font-size:.8rem;color:var(--text2);transition:border-color .15s}
+.dp-out:hover{border-color:var(--blue2)}
+.dp-out-icon{font-size:1rem;flex-shrink:0}
+
+.dp-right{}
+.dp-card{background:var(--white);border:1px solid var(--border);border-radius:10px;
+  padding:1.5rem;margin-bottom:1rem}
+.dp-card h4{font-family:var(--mono);font-size:.65rem;letter-spacing:1px;text-transform:uppercase;
+  color:var(--blue);margin-bottom:.85rem}
+
+/* Commission calculator */
+.comm-calc{padding:.25rem 0}
+.cc-row{display:flex;justify-content:space-between;align-items:center;
+  padding:.55rem 0;border-bottom:1px solid var(--mist);font-size:.85rem}
+.cc-row:last-child{border:none;font-weight:700;color:var(--ink);
+  font-family:var(--head);font-size:.95rem}
+.cc-row span:first-child{color:var(--text2)}
+.cc-row span:last-child{font-family:var(--mono);font-size:.82rem}
+.cc-row.highlight span:last-child{color:var(--blue);font-weight:600}
+.cc-slider-wrap{margin-top:1rem}
+.cc-slider-label{display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:.65rem;color:var(--text3);margin-bottom:.4rem}
+input[type=range]{width:100%;accent-color:var(--amber);cursor:pointer}
+
+/* Variance waterfall */
+.wf-bars{display:flex;align-items:flex-end;gap:.4rem;height:110px;
+  border-bottom:1px solid var(--border);margin-bottom:.5rem;padding-bottom:.25rem}
+.wf-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.wf-bar{width:100%;border-radius:3px 3px 0 0;transition:height .8s cubic-bezier(.4,0,.2,1);
+  min-height:3px;position:relative;cursor:default}
+.wf-bar:hover::after{content:attr(data-v);position:absolute;top:-22px;left:50%;
+  transform:translateX(-50%);font-family:var(--mono);font-size:.6rem;
+  color:var(--ink);white-space:nowrap;background:var(--white);
+  border:1px solid var(--border);padding:.15rem .4rem;border-radius:3px}
+.wf-bar.pos{background:linear-gradient(to top,#1A7A45,#2AA55E)}
+.wf-bar.neg{background:linear-gradient(to top,#B33A2A,#D94F3A)}
+.wf-bar.net{background:linear-gradient(to top,var(--blue),var(--blue2))}
+.wf-lbl{font-family:var(--mono);font-size:.58rem;color:var(--text3);text-align:center}
+
+/* P&L interactive */
+.pnl-table{width:100%;border-collapse:collapse}
+.pnl-table tr{border-bottom:1px solid var(--mist);cursor:pointer;transition:background .15s}
+.pnl-table tr:hover{background:var(--mist)}
+.pnl-table td{padding:.55rem .5rem;font-size:.82rem}
+.pnl-table td:last-child{text-align:right;font-family:var(--mono);font-size:.78rem}
+.pnl-section{background:var(--mist);font-family:var(--head);font-size:.8rem;
+  font-weight:700;color:var(--ink);cursor:default!important}
+.pnl-section:hover{background:var(--mist)!important}
+.pnl-total{font-family:var(--head);font-weight:700;color:var(--blue);border-top:2px solid var(--border)!important}
+.pnl-detail{display:none;background:var(--off)}
+.pnl-detail td{font-size:.78rem;color:var(--text3);padding-left:1.5rem!important}
+.pnl-detail.show{display:table-row}
+.pnl-pos{color:#1A7A45}
+.pnl-neg{color:#B33A2A}
+
+/* Bar chart */
+.bar-chart{display:flex;align-items:flex-end;gap:.5rem;height:90px;
+  border-bottom:1px solid var(--border);margin-bottom:.5rem}
+.bc-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.bc-bar{width:100%;background:linear-gradient(to top,var(--blue),var(--blue2));
+  border-radius:3px 3px 0 0;transition:height .9s cubic-bezier(.4,0,.2,1);min-height:3px}
+.bc-lbl{font-family:var(--mono);font-size:.58rem;color:var(--text3);text-align:center}
+
+/* ── EXPERIENCE ── */
+#experience{background:var(--white)}
+.exp-list{display:flex;flex-direction:column;gap:.85rem}
+.ec{background:var(--off);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;transition:all .25s;cursor:pointer}
+.ec:hover{border-color:var(--blue2);box-shadow:0 6px 24px rgba(31,92,139,.08)}
+.ec-top{padding:1.5rem 1.75rem;display:grid;grid-template-columns:1fr auto;gap:1rem;align-items:start}
+.ec-role{font-family:var(--head);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.25rem}
+.ec-co{font-family:var(--mono);font-size:.7rem;color:var(--blue);margin-bottom:.2rem;letter-spacing:.3px}
+.ec-sub{font-size:.78rem;color:var(--text3);font-style:italic;margin-bottom:.85rem}
+.ec-chips{display:flex;flex-wrap:wrap;gap:.3rem}
+.ec-chip{font-size:.68rem;font-weight:500;padding:.2rem .65rem;border-radius:100px;
+  background:var(--white);color:var(--text2);border:1px solid var(--border)}
+.ec-chip.hi{background:var(--amber3);color:#7A4E10;border-color:rgba(196,126,42,.3)}
+.ec-dt{font-family:var(--mono);font-size:.68rem;color:var(--text3);
+  background:var(--white);padding:.3rem .75rem;border-radius:5px;
+  border:1px solid var(--border);white-space:nowrap;height:fit-content}
+.ec-tog{padding:.65rem 1.75rem;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:.67rem;color:var(--text3);
+  display:flex;align-items:center;gap:.4rem;user-select:none;transition:color .2s}
+.ec:hover .ec-tog{color:var(--blue)}
+.ec-tog .arr{transition:transform .3s}
+.ec-tog.open .arr{transform:rotate(90deg)}
+.ec-body{max-height:0;overflow:hidden;transition:max-height .45s ease}
+.ec-body.open{max-height:600px}
+.ec-body ul{list-style:none;padding:0 1.75rem 1.5rem}
+.ec-body li{font-size:.86rem;color:var(--text2);line-height:1.8;
+  padding:.3rem 0 .3rem 1.4rem;position:relative;border-bottom:1px solid var(--mist);font-weight:300}
+.ec-body li:last-child{border:none}
+.ec-body li::before{content:'';position:absolute;left:0;top:.9rem;
+  width:5px;height:2px;background:var(--amber);border-radius:1px}
+
+/* ── NUMBERS ── */
+#numbers{background:var(--ink2);overflow:hidden;position:relative}
+#numbers::before{content:'';position:absolute;top:-100px;right:-100px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,126,42,.08) 0%,transparent 65%);pointer-events:none}
+#numbers .s-title{color:var(--white)}
+#numbers .s-pre{color:var(--amber2)}
+.nums-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.nc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:10px;padding:1.75rem 1.25rem;text-align:center;transition:all .25s;cursor:default}
+.nc:hover{background:rgba(255,255,255,.09);transform:translateY(-3px);border-color:rgba(196,126,42,.3)}
+.nc-big{font-family:var(--head);font-size:2.6rem;font-weight:800;color:var(--amber2);
+  line-height:1;margin-bottom:.4rem}
+.nc-lbl{font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.4);
+  line-height:1.6;letter-spacing:.5px}
+
+/* ── SKILLS ── */
+#skills{background:var(--off)}
+.skills-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.sk{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1.75rem}
+.sk:hover{border-color:var(--blue2);box-shadow:0 4px 16px rgba(31,92,139,.06)}
+.sk-head{font-family:var(--mono);font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--blue);margin-bottom:1.1rem;padding-bottom:.65rem;border-bottom:1px solid var(--border)}
+.sbr{margin-bottom:.9rem}
+.sbr-top{display:flex;justify-content:space-between;margin-bottom:.35rem}
+.sbr-nm{font-size:.82rem;color:var(--text);font-weight:500}
+.sbr-pc{font-family:var(--mono);font-size:.7rem;color:var(--text3)}
+.sbr-track{height:4px;background:var(--mist);border-radius:2px;overflow:hidden}
+.sbr-fill{height:100%;background:linear-gradient(to right,var(--blue),var(--blue2));
+  border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0}
+.sbr-fill.amber{background:linear-gradient(to right,var(--amber),var(--amber2))}
+.sk-pills{display:flex;flex-wrap:wrap;gap:.35rem}
+.sp{font-size:.73rem;font-weight:400;padding:.25rem .7rem;border-radius:100px;
+  background:var(--off);color:var(--text);border:1px solid var(--border);transition:all .15s;cursor:default}
+.sp:hover{background:var(--blue3);border-color:var(--blue2);color:var(--blue)}
+
+/* ── CONTACT ── */
+#contact{background:var(--white);text-align:center;padding:90px 2.5rem}
+#contact .s-rule{margin:0 auto 1rem}
+#contact .s-sub{margin:0 auto 2.5rem}
+.cg{display:flex;justify-content:center;gap:.85rem;flex-wrap:wrap}
+.cbtn{font-family:var(--mono);font-size:.75rem;letter-spacing:.4px;
+  background:var(--off);border:1px solid var(--border);color:var(--text2);
+  padding:.8rem 1.75rem;border-radius:7px;text-decoration:none;transition:all .2s;
+  display:inline-flex;align-items:center;gap:.5rem}
+.cbtn:hover{border-color:var(--blue2);color:var(--blue);background:var(--blue3);
+  transform:translateY(-2px)}
+.cbtn.prim{background:var(--amber);border-color:var(--amber);color:var(--ink);font-weight:600}
+.cbtn.prim:hover{background:var(--amber2);box-shadow:0 8px 24px rgba(196,126,42,.3)}
+
+footer{background:var(--ink);padding:1.5rem 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+  border-top:3px solid var(--amber)}
+.f-l{font-family:var(--head);font-size:.9rem;color:rgba(255,255,255,.4)}
+.f-l strong{color:var(--amber);font-weight:700}
+footer p{font-family:var(--mono);font-size:.62rem;color:rgba(255,255,255,.25)}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .hero-r{display:none}
+  .dpane.active,.skills-wrap,.nums-grid{grid-template-columns:1fr 1fr}
+  .nav-items,.nav-badge{display:none}
+}
+@media(max-width:520px){
+  .skills-wrap,.nums-grid,.dpane.active{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="cur-r"></div>
+
+<nav id="nav">
+  <div class="nav-mark"><span></span>Martin Gayot</div>
+  <div class="nav-items">
+    <a href="#demos">Demos</a>
+    <a href="#experience">Experience</a>
+    <a href="#numbers">Numbers</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="nav-badge">Financial Analyst · Remote</div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="top">
+  <div class="hero-l">
+    <div class="hl-label">Application · Financial Analyst · 3-Month Contract</div>
+    <h1 class="hl-name">MARTIN<br><em>GAYOT</em></h1>
+    <div class="hl-role">Modeling · Forecasting · AR · Commission Analytics</div>
+    <div class="hl-stats">
+      <div class="hls">
+        <div class="hls-num">7+</div>
+        <div class="hls-lbl">Years financial modeling,<br>variance analysis &amp; reporting</div>
+      </div>
+      <div class="hls">
+        <div class="hls-num">Big 4</div>
+        <div class="hls-lbl">Deloitte Luxembourg — IFRS,<br>multi-entity consolidation</div>
+      </div>
+      <div class="hls">
+        <div class="hls-num">6+</div>
+        <div class="hls-lbl">Tools: Excel, Power BI, SQL,<br>Power Query, VBA, ERP</div>
+      </div>
+    </div>
+    <div class="hl-cta">
+      <a href="mailto:martinhgayot@outlook.com" class="btn-a">Contact Me</a>
+      <a href="#demos" class="btn-b">View Live Demos ↓</a>
+    </div>
+  </div>
+  <div class="hero-r">
+    <div class="ticker-label">ANALYST_PROFILE // KEY METRICS</div>
+    <div class="ticker-grid">
+      <div class="ticker">
+        <div class="ticker-val">EDLC</div>
+        <div class="ticker-name">EXCEL CERTIFICATION</div>
+        <div class="ticker-sub">Power Query · Power Pivot · VBA</div>
+      </div>
+      <div class="ticker">
+        <div class="ticker-val pos">Active</div>
+        <div class="ticker-name">U.S. WORK AUTH.</div>
+        <div class="ticker-sub">No Sponsorship Required</div>
+      </div>
+      <div class="ticker">
+        <div class="ticker-val">3</div>
+        <div class="ticker-name">INS. LICENSES</div>
+        <div class="ticker-sub">FL · IL · TX</div>
+      </div>
+      <div class="ticker">
+        <div class="ticker-val pos">EST</div>
+        <div class="ticker-name">TIME ZONE</div>
+        <div class="ticker-sub">Remote · Available Now</div>
+      </div>
+    </div>
+    <div class="mini-pnl">
+      <div class="mpnl-title">// Sample P&amp;L Summary — Format Martin Builds</div>
+      <div class="mpnl-row"><span>Revenue</span><span>$2,840,000</span></div>
+      <div class="mpnl-row neg"><span>Cost of Sales</span><span>($1,136,000)</span></div>
+      <div class="mpnl-row pos"><span>Gross Profit</span><span>$1,704,000</span></div>
+      <div class="mpnl-row neg"><span>Operating Expenses</span><span>($980,000)</span></div>
+      <div class="mpnl-row neg"><span>Commission Payments</span><span>($142,000)</span></div>
+      <div class="mpnl-row total"><span>Net Income</span><span>$582,000</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DEMOS ══ -->
+<section class="section" id="demos">
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-pre">Interactive Demos</div>
+      <div class="s-rule"></div>
+      <h2 class="s-title">The Work I'll Bring on Day One</h2>
+      <p class="s-sub">Each tab below shows an analysis type Martin has built in the field — from commission tracking to variance reporting to P&amp;L management. Click through to explore.</p>
+    </div>
+    <div class="demo-tabs reveal">
+      <div class="dtab active" onclick="showDemo(0)">Commission Calc</div>
+      <div class="dtab" onclick="showDemo(1)">Variance Analysis</div>
+      <div class="dtab" onclick="showDemo(2)">P&amp;L Statement</div>
+      <div class="dtab" onclick="showDemo(3)">Cash Flow</div>
+      <div class="dtab" onclick="showDemo(4)">Forecasting</div>
+    </div>
+
+    <!-- DEMO 0: Commission Calculator -->
+    <div class="dpane active reveal" id="dp0">
+      <div class="dp-left">
+        <div class="dp-caption">// demo_type: COMMISSION_CALCULATOR</div>
+        <h3>Commission Calculations</h3>
+        <p>At Guardian Life, I built and maintained the commission calculation framework for all external sales organizations — calculating gross sales, applying tiered rate structures, reconciling against actuals, and producing clear payment summaries for each partner.</p>
+        <p>The demo on the right shows the logic live. Drag the revenue slider to recalculate automatically — the same model I ran monthly for each external sales organization.</p>
+        <div class="dp-outputs">
+          <div class="dp-out"><span class="dp-out-icon">📊</span>Tiered commission model — auto-calculating per partner</div>
+          <div class="dp-out"><span class="dp-out-icon">🔍</span>Discrepancy flagging — actuals vs. calculated reconciliation</div>
+          <div class="dp-out"><span class="dp-out-icon">📄</span>Payment summary report — formatted for finance and leadership</div>
+        </div>
+      </div>
+      <div class="dp-right">
+        <div class="dp-card">
+          <h4>// Live Commission Calculator</h4>
+          <div class="cc-slider-wrap">
+            <div class="cc-slider-label">
+              <span>Monthly Sales Revenue</span>
+              <span id="rev-display">$250,000</span>
+            </div>
+            <input type="range" min="50000" max="600000" step="5000" value="250000"
+              id="rev-slider" oninput="calcComm(this.value)">
+          </div>
+          <div class="comm-calc" id="comm-output">
+            <!-- filled by JS -->
+          </div>
+        </div>
+        <div class="dp-card">
+          <h4>// Reconciliation Process</h4>
+          <p style="font-size:.82rem;color:var(--text2);line-height:1.75">Each month: pull actuals from CRM, apply rate table in Excel via VLOOKUP + conditional logic, compare against submitted partner invoices, flag variances above 2% threshold, produce signed-off summary for AP processing.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO 1: Variance Analysis -->
+    <div class="dpane" id="dp1">
+      <div class="dp-left">
+        <div class="dp-caption">// demo_type: VARIANCE_ANALYSIS</div>
+        <h3>Variance Reporting</h3>
+        <p>At Deloitte (Big 4) and Vacasa, variance analysis was a core monthly deliverable — decomposing performance deviations versus budget, prior period, and market benchmark into actionable drivers. The waterfall chart on the right shows the format I produce.</p>
+        <p>For this role: monthly budget-vs-actual variance reports with clear driver attribution, presented to leadership in narrative format alongside the numbers.</p>
+        <div class="dp-outputs">
+          <div class="dp-out"><span class="dp-out-icon">📉</span>Budget vs. actuals waterfall — driver decomposition</div>
+          <div class="dp-out"><span class="dp-out-icon">📝</span>Variance narrative — plain-language executive summary</div>
+          <div class="dp-out"><span class="dp-out-icon">⚠️</span>Anomaly flagging — items outside tolerance threshold</div>
+        </div>
+      </div>
+      <div class="dp-right">
+        <div class="dp-card">
+          <h4>// Variance Waterfall — Budget vs. Actual</h4>
+          <div class="wf-bars" id="wfBars">
+            <div class="wf-col"><div class="wf-bar pos" data-v="+8.4%" id="wf0" style="height:0"></div><div class="wf-lbl">REVENUE</div></div>
+            <div class="wf-col"><div class="wf-bar neg" data-v="-3.2%" id="wf1" style="height:0"></div><div class="wf-lbl">COGS</div></div>
+            <div class="wf-col"><div class="wf-bar pos" data-v="+5.1%" id="wf2" style="height:0"></div><div class="wf-lbl">GROSS PROFIT</div></div>
+            <div class="wf-col"><div class="wf-bar neg" data-v="-4.6%" id="wf3" style="height:0"></div><div class="wf-lbl">OPEX</div></div>
+            <div class="wf-col"><div class="wf-bar neg" data-v="-1.8%" id="wf4" style="height:0"></div><div class="wf-lbl">COMMISSION</div></div>
+            <div class="wf-col"><div class="wf-bar net" data-v="+3.7%" id="wf5" style="height:0"></div><div class="wf-lbl">NET</div></div>
+          </div>
+          <div style="font-family:var(--mono);font-size:.6rem;color:var(--text3);text-align:center">
+            Favourable variance shown positive. Net +3.7% vs. budget.</div>
+        </div>
+        <div class="dp-card">
+          <h4>// Key Findings — Month 3</h4>
+          <p style="font-size:.82rem;color:var(--text2);line-height:1.75">Revenue beat driven by above-plan deal closure in Q3 cohort (+$84K). OPEX overage concentrated in travel and contractor lines — flagged for budget review. Commission overrun reflects variable payout on outperformance; adjusted forecast updated.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO 2: P&L -->
+    <div class="dpane" id="dp2">
+      <div class="dp-left">
+        <div class="dp-caption">// demo_type: PNL_STATEMENT</div>
+        <h3>P&amp;L Statements</h3>
+        <p>Monthly P&amp;L preparation was a core deliverable at Guardian Life and Vacasa — building from raw data sources through to executive-ready formatted statements with notes and variance commentary. Click any revenue or expense line in the table to expand detail.</p>
+        <div class="dp-outputs">
+          <div class="dp-out"><span class="dp-out-icon">📋</span>Consolidated P&amp;L — multi-entity or single-entity</div>
+          <div class="dp-out"><span class="dp-out-icon">🔄</span>Auto-refresh via Power Query — no manual data pulls</div>
+          <div class="dp-out"><span class="dp-out-icon">📌</span>Variance notes embedded — contextual commentary per line</div>
+        </div>
+      </div>
+      <div class="dp-right">
+        <div class="dp-card">
+          <h4>// Interactive P&amp;L — Click Lines to Expand</h4>
+          <table class="pnl-table">
+            <tr class="pnl-section"><td colspan="2">REVENUE</td></tr>
+            <tr onclick="togglePnl('rev1')">
+              <td>Product Sales</td><td class="pnl-pos">$1,840,000</td></tr>
+            <tr class="pnl-detail" id="rev1">
+              <td>— Direct Sales: $1,240,000</td><td class="pnl-pos">+8.2% vs. prior</td></tr>
+            <tr class="pnl-detail" id="rev1b">
+              <td>— Partner Channel: $600,000</td><td class="pnl-pos">+11.4% vs. prior</td></tr>
+            <tr onclick="togglePnl('rev2')">
+              <td>Commission Income</td><td class="pnl-pos">$142,000</td></tr>
+            <tr class="pnl-detail" id="rev2">
+              <td>— 3 external sales orgs, tiered rate 4–7%</td><td>Reconciled monthly</td></tr>
+            <tr class="pnl-section"><td colspan="2">EXPENSES</td></tr>
+            <tr onclick="togglePnl('exp1')">
+              <td>Cost of Sales</td><td class="pnl-neg">($736,000)</td></tr>
+            <tr class="pnl-detail" id="exp1">
+              <td>— Materials &amp; production, 40% of revenue</td><td>In line with budget</td></tr>
+            <tr onclick="togglePnl('exp2')">
+              <td>Operating Expenses</td><td class="pnl-neg">($498,000)</td></tr>
+            <tr class="pnl-detail" id="exp2">
+              <td>— Overage in travel &amp; contractors: +$18K</td><td class="pnl-neg">Flagged for review</td></tr>
+            <tr onclick="togglePnl('exp3')">
+              <td>Commission Payments</td><td class="pnl-neg">($142,000)</td></tr>
+            <tr class="pnl-detail" id="exp3">
+              <td>— Variable payout on outperformance vs. target</td><td>Adjusted in forecast</td></tr>
+            <tr class="pnl-total">
+              <td>Net Income</td><td class="pnl-pos">$606,000</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO 3: Cash Flow -->
+    <div class="dpane" id="dp3">
+      <div class="dp-left">
+        <div class="dp-caption">// demo_type: CASH_FLOW_ANALYSIS</div>
+        <h3>Cash Flow Analysis</h3>
+        <p>At Guardian Life and Vacasa I managed AR aging, funding requests, and cash flow visibility reporting — ensuring leadership had an accurate picture of liquidity, outstanding receivables, and expected collection timelines at any point in the month.</p>
+        <p>AR management means knowing not just what is owed but when it will convert to cash — and escalating items before they become collection problems.</p>
+        <div class="dp-outputs">
+          <div class="dp-out"><span class="dp-out-icon">💰</span>AR aging report — 30 / 60 / 90+ day buckets</div>
+          <div class="dp-out"><span class="dp-out-icon">📥</span>Funding request tracking — approvals and disbursements</div>
+          <div class="dp-out"><span class="dp-out-icon">📊</span>Monthly cash flow statement — operating, investing, financing</div>
+        </div>
+      </div>
+      <div class="dp-right">
+        <div class="dp-card">
+          <h4>// AR Aging Summary</h4>
+          <div class="bar-chart" id="arChart">
+            <div class="bc-col"><div class="bc-bar" id="ar0" style="height:0"></div><div class="bc-lbl">CURRENT</div></div>
+            <div class="bc-col"><div class="bc-bar" id="ar1" style="height:0;background:linear-gradient(to top,#1A7A45,#2AA55E)"></div><div class="bc-lbl">1–30</div></div>
+            <div class="bc-col"><div class="bc-bar" id="ar2" style="height:0;background:linear-gradient(to top,#C47E2A,#E09840)"></div><div class="bc-lbl">31–60</div></div>
+            <div class="bc-col"><div class="bc-bar" id="ar3" style="height:0;background:linear-gradient(to top,#B33A2A,#D94F3A)"></div><div class="bc-lbl">61–90</div></div>
+            <div class="bc-col"><div class="bc-bar" id="ar4" style="height:0;background:linear-gradient(to top,#6B0000,#A00000)"></div><div class="bc-lbl">90+</div></div>
+          </div>
+          <div style="font-family:var(--mono);font-size:.6rem;color:var(--text3);text-align:center;margin-top:.3rem">
+            Taller = larger outstanding balance. 61-90 and 90+ flagged for escalation.</div>
+        </div>
+        <div class="dp-card">
+          <h4>// Cash Flow Statement Format</h4>
+          <div class="cc-row"><span>Operating Cash Flow</span><span style="font-family:var(--mono);color:#1A7A45">$544,000</span></div>
+          <div class="cc-row"><span>AR Collections Received</span><span style="font-family:var(--mono);color:#1A7A45">+$380,000</span></div>
+          <div class="cc-row"><span>Funding Disbursements</span><span style="font-family:var(--mono);color:#B33A2A">-$120,000</span></div>
+          <div class="cc-row" style="font-weight:700;font-family:var(--head)"><span>Net Cash Position</span><span style="font-family:var(--mono);color:var(--blue)">$804,000</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEMO 4: Forecasting -->
+    <div class="dpane" id="dp4">
+      <div class="dp-left">
+        <div class="dp-caption">// demo_type: FINANCIAL_FORECASTING</div>
+        <h3>Budgeting &amp; Forecasting</h3>
+        <p>I owned the full forecasting cycle at both Guardian Life and Vacasa — building base, upside, and downside scenarios, incorporating updated pipeline assumptions mid-period, and reforecasting on a rolling basis. The chart shows a 6-period rolling forecast vs. actuals.</p>
+        <div class="dp-outputs">
+          <div class="dp-out"><span class="dp-out-icon">📐</span>3-scenario model — base / upside / downside with sensitivity tables</div>
+          <div class="dp-out"><span class="dp-out-icon">🔄</span>Rolling reforecast — updated monthly with actuals variance</div>
+          <div class="dp-out"><span class="dp-out-icon">📤</span>Executive summary — one-page narrative with key assumptions</div>
+        </div>
+      </div>
+      <div class="dp-right">
+        <div class="dp-card">
+          <h4>// 6-Period Forecast vs. Actuals</h4>
+          <div style="height:100px;position:relative">
+            <svg viewBox="0 0 280 100" preserveAspectRatio="none" style="width:100%;height:100%">
+              <defs>
+                <linearGradient id="fcGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#1F5C8B" stop-opacity=".15"/>
+                  <stop offset="100%" stop-color="#1F5C8B" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <!-- Forecast range band -->
+              <path d="M10,60 L56,52 L102,45 L148,40 L194,36 L240,32 L240,55 L194,58 L148,62 L102,66 L56,70 L10,75Z" fill="url(#fcGrad)"/>
+              <!-- Actuals line -->
+              <path d="M10,65 L56,58 L102,50 L148,48" fill="none" stroke="#1F5C8B" stroke-width="2" stroke-dasharray="280" stroke-dashoffset="280">
+                <animate attributeName="stroke-dashoffset" from="280" to="0" dur="1.4s" fill="freeze"/>
+              </path>
+              <!-- Forecast line (dashed) -->
+              <path d="M148,48 L194,42 L240,36" fill="none" stroke="#C47E2A" stroke-width="1.5" stroke-dasharray="6,4"/>
+              <!-- Divider -->
+              <line x1="148" y1="10" x2="148" y2="90" stroke="rgba(0,0,0,.08)" stroke-width="1" stroke-dasharray="3,3"/>
+              <text x="155" y="18" font-family="Inconsolata" font-size="7" fill="#8A9EB0">FORECAST</text>
+              <text x="80" y="18" font-family="Inconsolata" font-size="7" fill="#1F5C8B">ACTUALS</text>
+              <line x1="10" y1="88" x2="240" y2="88" stroke="rgba(0,0,0,.08)" stroke-width="1"/>
+              <text x="10" y="97" font-family="Inconsolata" font-size="6" fill="#8A9EB0">M1</text>
+              <text x="56" y="97" font-family="Inconsolata" font-size="6" fill="#8A9EB0">M2</text>
+              <text x="102" y="97" font-family="Inconsolata" font-size="6" fill="#8A9EB0">M3</text>
+              <text x="148" y="97" font-family="Inconsolata" font-size="6" fill="#8A9EB0">M4</text>
+              <text x="194" y="97" font-family="Inconsolata" font-size="6" fill="#8A9EB0">M5</text>
+              <text x="235" y="97" font-family="Inconsolata" font-size="6" fill="#8A9EB0">M6</text>
+            </svg>
+          </div>
+          <div style="display:flex;gap:1rem;margin-top:.5rem">
+            <span style="font-family:var(--mono);font-size:.62rem;color:var(--blue);display:flex;align-items:center;gap:.3rem">
+              <span style="width:12px;height:2px;background:var(--blue);display:inline-block"></span>Actuals</span>
+            <span style="font-family:var(--mono);font-size:.62rem;color:var(--amber);display:flex;align-items:center;gap:.3rem">
+              <span style="width:12px;height:2px;background:var(--amber);display:inline-block;border-top:2px dashed var(--amber)"></span>Forecast</span>
+          </div>
+        </div>
+        <div class="dp-card">
+          <h4>// Key Assumptions</h4>
+          <div class="cc-row"><span style="font-size:.8rem;color:var(--text2)">Revenue growth rate</span><span style="font-family:var(--mono);font-size:.78rem">+6.2% MoM</span></div>
+          <div class="cc-row"><span style="font-size:.8rem;color:var(--text2)">Commission rate (blended)</span><span style="font-family:var(--mono);font-size:.78rem">5.3%</span></div>
+          <div class="cc-row"><span style="font-size:.8rem;color:var(--text2)">AR collection lag</span><span style="font-family:var(--mono);font-size:.78rem">28 days avg</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ EXPERIENCE ══ -->
+<section class="section" id="experience">
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-pre">Track Record</div>
+      <div class="s-rule"></div>
+      <h2 class="s-title">Where I've Done This Work</h2>
+      <p class="s-sub">Click any role to expand. Every bullet maps directly to the duties and skills listed in the job description.</p>
+    </div>
+    <div class="exp-list reveal">
+
+      <div class="ec" onclick="toggleEc(this)">
+        <div class="ec-top">
+          <div>
+            <div class="ec-role">Financial Analyst &amp; Business Analytics Advisor</div>
+            <div class="ec-co">// GUARDIAN LIFE · TEXAS, USA · REMOTE</div>
+            <div class="ec-sub">Commission tracking, AR management, P&amp;L reporting, financial modeling, forecasting, and variance analysis.</div>
+            <div class="ec-chips">
+              <span class="ec-chip hi">Commission Calculations</span>
+              <span class="ec-chip hi">Accounts Receivable</span>
+              <span class="ec-chip">Financial Modeling</span>
+              <span class="ec-chip">P&amp;L Statements</span>
+              <span class="ec-chip">Power Query + VBA</span>
+              <span class="ec-chip">Variance Reporting</span>
+            </div>
+          </div>
+          <div class="ec-dt">OCT 2024 – JAN 2026</div>
+        </div>
+        <div class="ec-tog"><span class="arr">▶</span>&nbsp;Expand details</div>
+        <div class="ec-body">
+          <ul>
+            <li>Calculated, tracked, and reconciled commission structures for external sales organizations across multiple product lines — maintaining accurate payment records and resolving discrepancies monthly.</li>
+            <li>Managed accounts receivable workflows end to end, including funding requests, aging analysis, collections follow-up, and monthly AR reporting to senior leadership.</li>
+            <li>Built multi-scenario financial models supporting budgeting, forecasting, and strategic planning — producing sensitivity tables and scenario outputs used for executive decision-making.</li>
+            <li>Prepared monthly P&amp;L statements, cash flow analyses, and variance reports — clearly communicating drivers of performance deviation and recommended corrective actions.</li>
+            <li>Built automated Excel dashboards using Power Query, Power Pivot, VBA macros, and dynamic KPI tracking — eliminating manual reporting overhead and delivering real-time financial visibility.</li>
+            <li>Conducted cost accounting analyses to assess resource allocation efficiency and recommend margin improvements.</li>
+            <li>Performed quantitative research and business analysis to evaluate product profitability, assess financial risk, and support pricing decisions.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ec" onclick="toggleEc(this)">
+        <div class="ec-top">
+          <div>
+            <div class="ec-role">Regional Finance &amp; Analytics Manager</div>
+            <div class="ec-co">// VACASA · BELIZE · REMOTE WITH U.S. HQ · PUBLICLY TRADED</div>
+            <div class="ec-sub">Multi-region P&amp;L management, financial modeling, ERP reporting, SQL analytics, and strategic forecasting.</div>
+            <div class="ec-chips">
+              <span class="ec-chip hi">P&amp;L Management</span>
+              <span class="ec-chip hi">ERP (Oracle/NetSuite)</span>
+              <span class="ec-chip">Power BI + SQL</span>
+              <span class="ec-chip">Budgeting &amp; Forecasting</span>
+              <span class="ec-chip">Cost Accounting</span>
+              <span class="ec-chip">Cash Flow Analysis</span>
+            </div>
+          </div>
+          <div class="ec-dt">JAN 2022 – SEP 2024</div>
+        </div>
+        <div class="ec-tog"><span class="arr">▶</span>&nbsp;Expand details</div>
+        <div class="ec-body">
+          <ul>
+            <li>Prepared consolidated P&amp;L statements, cash flow analyses, and budget-vs-actual variance reports for a multi-region portfolio — presenting findings monthly to U.S. executive leadership.</li>
+            <li>Built financial models for budgeting, forecasting, and scenario planning across multiple business units, incorporating rate change assumptions and volume sensitivity analyses.</li>
+            <li>Managed ERP data integration and reporting workflows in Oracle/NetSuite — designing automated pipelines that improved data accuracy and eliminated manual reconciliation overhead.</li>
+            <li>Performed large-scale cost accounting analyses using SQL and advanced Excel to assess departmental resource efficiency and identify savings opportunities.</li>
+            <li>Built automated Power BI and Excel reporting dashboards tracking key financial metrics with SQL-driven data pulls from dimensional data sources.</li>
+            <li>Conducted quantitative research and business analysis on pricing decisions and portfolio mix to support strategic planning and resource allocation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ec" onclick="toggleEc(this)">
+        <div class="ec-top">
+          <div>
+            <div class="ec-role">Financial Auditor — Quantitative Analysis &amp; Reporting</div>
+            <div class="ec-co">// DELOITTE · LUXEMBOURG, EU · BIG 4</div>
+            <div class="ec-sub">Private Equity &amp; AIF funds. IFRS &amp; Luxembourg GAAP. Variance analysis, financial reporting, controls.</div>
+            <div class="ec-chips">
+              <span class="ec-chip hi">Big 4 Rigor</span>
+              <span class="ec-chip">Variance &amp; Flux Analysis</span>
+              <span class="ec-chip">Financial Statements</span>
+              <span class="ec-chip">IFRS + US GAAP</span>
+              <span class="ec-chip">ERP Reconciliation</span>
+            </div>
+          </div>
+          <div class="ec-dt">JUL 2019 – NOV 2020</div>
+        </div>
+        <div class="ec-tog"><span class="arr">▶</span>&nbsp;Expand details</div>
+        <div class="ec-body">
+          <ul>
+            <li>Produced structured financial reports and variance analyses for CFOs and fund managers, translating complex multi-entity financial data into clear, decision-ready outputs under tight deadlines.</li>
+            <li>Performed detailed flux and variance analyses across P&amp;L, balance sheet, and cash flow statements — applying Big 4 precision in identifying anomalies and control gaps.</li>
+            <li>Evaluated financial reporting compliance against IFRS and Luxembourg GAAP standards — researching and documenting accounting issues and recommending corrective adjustments.</li>
+            <li>Supported ERP data validation and reconciliation workflows, ensuring accuracy of financial data extracted from consolidation systems for audit and reporting purposes.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ec" onclick="toggleEc(this)">
+        <div class="ec-top">
+          <div>
+            <div class="ec-role">Finance &amp; Operations Assistant</div>
+            <div class="ec-co">// FIRST LAW INTERNATIONAL · BELGIUM, EU · 10-MONTH CONTRACT</div>
+            <div class="ec-sub">Financial reporting, AR tracking, KPI analysis, and data management across multiple European legal entities.</div>
+            <div class="ec-chips">
+              <span class="ec-chip">AR Tracking</span>
+              <span class="ec-chip">Monthly Reporting</span>
+              <span class="ec-chip">Multi-entity Finance</span>
+              <span class="ec-chip">90+ Partner Network</span>
+            </div>
+          </div>
+          <div class="ec-dt">JAN 2017 – NOV 2017</div>
+        </div>
+        <div class="ec-tog"><span class="arr">▶</span>&nbsp;Expand details</div>
+        <div class="ec-body">
+          <ul>
+            <li>Prepared monthly P&amp;L reports, KPI summaries, and AR aging analyses — maintaining data integrity and accurate financial records across multiple legal entities.</li>
+            <li>Coordinated funding requests and tracked AR balances for a 90+ partner network, ensuring timely resolution of outstanding items and accurate payment records.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ NUMBERS ══ -->
+<section class="section" id="numbers">
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-pre">Evidence</div>
+      <h2 class="s-title">By the Numbers</h2>
+    </div>
+    <div class="nums-grid reveal">
+      <div class="nc d1"><div class="nc-big">7+</div><div class="nc-lbl">YEARS FINANCIAL<br>MODELING & REPORTING</div></div>
+      <div class="nc d2"><div class="nc-big">BIG 4</div><div class="nc-lbl">DELOITTE<br>LUXEMBOURG</div></div>
+      <div class="nc d3"><div class="nc-big">EDLC</div><div class="nc-lbl">ADVANCED EXCEL<br>CERTIFIED</div></div>
+      <div class="nc d1"><div class="nc-big">6+</div><div class="nc-lbl">TOOLS: EXCEL · BI<br>SQL · VBA · ERP</div></div>
+      <div class="nc d2"><div class="nc-big">3</div><div class="nc-lbl">INS. LICENSES<br>FL · IL · TX</div></div>
+      <div class="nc d3"><div class="nc-big">3</div><div class="nc-lbl">LANGUAGES<br>FR · EN · ES</div></div>
+      <div class="nc d1"><div class="nc-big">0→1</div><div class="nc-lbl">ANALYTICS INFRA<br>BUILT FROM ZERO</div></div>
+      <div class="nc d2"><div class="nc-big">NO</div><div class="nc-lbl">SPONSORSHIP<br>REQUIRED</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SKILLS ══ -->
+<section class="section" id="skills">
+  <div class="inner">
+    <div class="reveal">
+      <div class="s-pre">Toolkit</div>
+      <div class="s-rule"></div>
+      <h2 class="s-title">Skills &amp; Technical Stack</h2>
+      <p class="s-sub">What I bring on day one — including the tools called out explicitly in the job description.</p>
+    </div>
+    <div class="skills-wrap">
+      <div class="sk reveal d1" id="skp1">
+        <div class="sk-head">// FINANCIAL ANALYSIS</div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">Financial Modeling</span><span class="sbr-pc">92%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="92"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">Variance & Flux Analysis</span><span class="sbr-pc">94%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="94"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">P&amp;L / Cash Flow Reporting</span><span class="sbr-pc">90%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="90"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">Commission Calculations</span><span class="sbr-pc">88%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="88"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">Budgeting &amp; Forecasting</span><span class="sbr-pc">91%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="91"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">Cost Accounting</span><span class="sbr-pc">82%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="82"></div></div></div>
+      </div>
+      <div class="sk reveal d2" id="skp2">
+        <div class="sk-head">// TECHNICAL TOOLS</div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">Excel (Power Query · Power Pivot)</span><span class="sbr-pc">96%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="96"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">Power BI</span><span class="sbr-pc">80%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="80"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">VBA (Macros &amp; Automation)</span><span class="sbr-pc">78%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="78"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">SQL</span><span class="sbr-pc">68%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="68" class="amber"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">ERP Systems (Oracle/NetSuite · Xero)</span><span class="sbr-pc">80%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="80"></div></div></div>
+        <div class="sbr"><div class="sbr-top"><span class="sbr-nm">Tableau (familiar)</span><span class="sbr-pc">45%</span></div><div class="sbr-track"><div class="sbr-fill" data-w="45" class="amber"></div></div></div>
+      </div>
+      <div class="sk reveal d1">
+        <div class="sk-head">// FINANCIAL STANDARDS</div>
+        <div class="sk-pills">
+          <span class="sp">IFRS</span><span class="sp">US GAAP</span>
+          <span class="sp">Luxembourg GAAP</span><span class="sp">Big 4 Audit Rigor</span>
+          <span class="sp">Internal Controls</span><span class="sp">Corporate Finance</span>
+          <span class="sp">Gov. Accounting (familiar)</span>
+          <span class="sp">Compliance Documentation</span>
+        </div>
+      </div>
+      <div class="sk reveal d2">
+        <div class="sk-head">// EDUCATION &amp; CREDENTIALS</div>
+        <div class="sk-pills">
+          <span class="sp">MSc Business Engineering — Solvay/ULB</span>
+          <span class="sp">BSc Corporate Finance — EMLYON</span>
+          <span class="sp">EDLC Excel Certification</span>
+          <span class="sp">Life &amp; Health Lic — FL/IL/TX</span>
+          <span class="sp">SIE — FINRA</span>
+          <span class="sp">🇫🇷 French — Native</span>
+          <span class="sp">🇬🇧 English — Native</span>
+          <span class="sp">🇪🇸 Spanish — Professional</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="reveal">
+    <div class="s-pre" style="display:flex;justify-content:center">Ready to Start</div>
+    <div class="s-rule" style="margin:0 auto 1rem"></div>
+    <h2 class="s-title" style="color:var(--ink)">Available Immediately</h2>
+    <p class="s-sub" style="color:var(--text2);margin:0 auto 2.5rem">Remote, EST-aligned. U.S. work authorized with no sponsorship required — now or in the future. 3-month contract start available immediately.</p>
+    <div class="cg">
+      <a href="mailto:martinhgayot@outlook.com" class="cbtn prim">✉ martinhgayot@outlook.com</a>
+      <a href="tel:+18177181588" class="cbtn">📞 +1 817-718-1588</a>
+      <a href="https://linkedin.com/in/martingayot" class="cbtn" target="_blank">🔗 LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-l"><strong>Martin Gayot</strong> · Financial Analyst Application · 2026</div>
+  <p>REMOTE · EST · U.S. WORK AUTHORIZED · NO SPONSORSHIP REQUIRED</p>
+</footer>
+
+<script>
+// Cursor
+const cur=document.getElementById('cur');
+const curR=document.getElementById('cur-r');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;
+  cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function tick(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;
+  curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(tick);})();
+
+// Nav active
+window.addEventListener('scroll',()=>{
+  const secs=document.querySelectorAll('section[id]');
+  const links=document.querySelectorAll('.nav-items a');
+  let cur2='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-70)cur2=s.id;});
+  links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur2));
+});
+
+// Reveal observer
+const obs=new IntersectionObserver(e=>{
+  e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});
+},{threshold:.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Skill bars
+const sbObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.sbr-fill').forEach(b=>b.style.width=b.dataset.w+'%');
+      sbObs.unobserve(e.target);
+    }
+  });
+},{threshold:.3});
+document.querySelectorAll('.sk').forEach(p=>sbObs.observe(p));
+
+// Experience accordion
+function toggleEc(card){
+  const body=card.querySelector('.ec-body');
+  const tog=card.querySelector('.ec-tog');
+  const open=body.classList.contains('open');
+  body.classList.toggle('open',!open);
+  tog.classList.toggle('open',!open);
+  tog.innerHTML=open
+    ?'<span class="arr">▶</span>&nbsp;Expand details'
+    :'<span class="arr">▶</span>&nbsp;Collapse';
+}
+
+// Commission calculator
+function calcComm(val){
+  const v=parseInt(val);
+  document.getElementById('rev-display').textContent='$'+v.toLocaleString();
+  let rate, tier;
+  if(v<100000){rate=0.04;tier='Tier 1 (<$100K)'}
+  else if(v<250000){rate=0.05;tier='Tier 2 ($100K–$250K)'}
+  else if(v<400000){rate=0.055;tier='Tier 3 ($250K–$400K)'}
+  else{rate=0.07;tier='Tier 4 ($400K+)'}
+  const gross=Math.round(v*rate);
+  const tax=Math.round(gross*0.0765);
+  const net=gross-tax;
+  document.getElementById('comm-output').innerHTML=`
+    <div class="cc-row"><span>Monthly Revenue</span><span>$${v.toLocaleString()}</span></div>
+    <div class="cc-row"><span>Rate Schedule</span><span>${tier}</span></div>
+    <div class="cc-row highlight"><span>Applied Rate</span><span>${(rate*100).toFixed(1)}%</span></div>
+    <div class="cc-row highlight"><span>Gross Commission</span><span>$${gross.toLocaleString()}</span></div>
+    <div class="cc-row"><span>Employer Tax Est.</span><span>-$${tax.toLocaleString()}</span></div>
+    <div class="cc-row" style="font-weight:700;font-family:var(--head)"><span>Net Payable</span><span style="color:var(--blue)">$${net.toLocaleString()}</span></div>
+  `;
+}
+calcComm(250000);
+
+// Demo tabs
+function showDemo(idx){
+  document.querySelectorAll('.dtab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.dpane').forEach((p,i)=>p.classList.toggle('active',i===idx));
+  // Animate bars when relevant pane activates
+  setTimeout(()=>{
+    if(idx===1) animWaterfall();
+    if(idx===2) animPnlBars();
+    if(idx===3) animArBars();
+  },50);
+}
+
+function animWaterfall(){
+  const heights=[88,55,70,60,42,100];
+  ['wf0','wf1','wf2','wf3','wf4','wf5'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el) setTimeout(()=>{el.style.height=heights[i]+'%';},i*80);
+  });
+}
+
+function animPnlBars(){}
+
+function animArBars(){
+  const h=[90,65,40,30,18];
+  const colors=['#1F5C8B','#1A7A45','#C47E2A','#B33A2A','#6B0000'];
+  ['ar0','ar1','ar2','ar3','ar4'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(el) setTimeout(()=>{el.style.height=h[i]+'%';},i*80);
+  });
+}
+
+// P&L row toggle
+function togglePnl(id){
+  const rows=document.querySelectorAll(`[id^="${id}"]`);
+  rows.forEach(r=>r.classList.toggle('show'));
+}
+
+// Animate waterfall on first view of demo section
+const demoObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      setTimeout(animWaterfall, 400);
+      demoObs.unobserve(e.target);
+    }
+  });
+},{threshold:.2});
+const demosSection=document.getElementById('demos');
+if(demosSection) demoObs.observe(demosSection);
+
+// AR bars animate on numbers scroll
+const arObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){animArBars();arObs.unobserve(e.target);}
+  });
+},{threshold:.3});
+const arChart=document.getElementById('arChart');
+if(arChart) arObs.observe(arChart);
+</script>
+</body>
+</html>
